@@ -1,15 +1,13 @@
-import { Button } from '@/components/ui/button'
 import React from 'react'
 
 const Home = () => {
 
   return (
     <>
-      <div className='text-center text-3xl'>Welcome to dalVacationHome!</div>
-      <div className='flex justify-center'>
-        <Button variant="secondary">Click Me</Button>
-        </div>
-      </>
+      <div className='flex m-4 justify-center items-center text-4xl'>
+        No listing to show...!
+      </div>
+    </>
   )
 }
 

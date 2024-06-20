@@ -1,22 +1,24 @@
-import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import { Toaster } from "react-hot-toast";
+import NotFound from "./pages/NotFound";
 
 function App() {
 
   return (
     <>
-      <Toaster/>
+      <Toaster />
       <Router>
-      <Navbar/>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn/>} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>
