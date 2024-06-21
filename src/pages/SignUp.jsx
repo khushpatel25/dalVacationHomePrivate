@@ -43,9 +43,15 @@ const schema = z.object({
 
 const SignUp = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      question: commonSecurityQuestions[0]
+    }
   });
+
+  const answer = watch('answer')
+  const question = watch('question')
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -57,9 +63,7 @@ const SignUp = () => {
   }, [userRole])
 
   const onSubmit = async (data) => {
-    const { email, password, question, answer, userRole } = data;
-
-    console.log(data);
+    const { email, password, userRole } = data;
 
     setLoading(true);
 
@@ -100,7 +104,7 @@ const SignUp = () => {
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto mt-10">
       <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
-      <form onSubmit={handleSubmit(onSubmit,console.error)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit, console.error)} className="space-y-4">
         {authStage === 1 && (
           <>
             <div>
@@ -156,7 +160,7 @@ const SignUp = () => {
               <Label htmlFor="question">Security Question</Label>
               <select
                 id="question"
-                {...register('question')}
+                onChange={(e) => setValue('question', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {commonSecurityQuestions.map((question, index) => (
@@ -172,7 +176,8 @@ const SignUp = () => {
                 type="text"
                 required
                 placeholder="Answer"
-                {...register('answer')}
+                value={answer || ''}
+                onChange={e => setValue('answer', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {errors.answer && <p className="text-red-600">{errors.answer.message}</p>}
