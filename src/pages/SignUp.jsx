@@ -79,6 +79,11 @@ const SignUp = () => {
             },
           }
         });
+        await axiosInstance.post(import.meta.env.VITE_SEND_CONFIRMATION_EMAIL_URL, {
+          topicArn: import.meta.env.VITE_SNS_TOPIC_ARN,
+          email
+        })
+        alert("Check your email to confirm SNS subscription.")
         setAuthStage(2)
       } else if (authStage === 2) {
         await axiosInstance.post(import.meta.env.VITE_POST_SECURITY_QUESTION_URL, {

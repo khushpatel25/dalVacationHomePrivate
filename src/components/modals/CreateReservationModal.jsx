@@ -31,7 +31,7 @@ const reservationSchema = z
     });
 
 
-const CreateReservationModal = ({ roomId, setReservationId, reservation }) => {
+const CreateReservationModal = ({ roomId, setStatus }) => {
 
     const { userId } = userStore();
     const { addReservationId } = useReservationStore();
@@ -49,7 +49,7 @@ const CreateReservationModal = ({ roomId, setReservationId, reservation }) => {
 
     const saveReservationDetails = (reservationId, reservationUserId, roomId) => {
         addReservationId({ reservationId, reservationUserId, roomId });
-        setReservationId([...reservation, reservationId])
+        setStatus("pending");
     }
 
     const onSubmit = async (data) => {
@@ -59,21 +59,23 @@ const CreateReservationModal = ({ roomId, setReservationId, reservation }) => {
             const { startDate, endDate } = data;
 
             const res = await axiosInstance.post(import.meta.env.VITE_CREATE_RESERVATION_URL, {
-                roomId,
-                userId,
-                startDate,
-                endDate
+                bookingDetails: {
+                    roomId,
+                    userId,
+                    startDate,
+                    endDate
+                }
             });
 
             const parsedBody = JSON.parse(res.data.body);
             const reservationId = parsedBody.reservationId;
 
-            toast.success("Reservation created successfully.");
+            toast.success("Booking request successfully added to queue.");
             setIsOpen(false);
             saveReservationDetails(reservationId, userId, roomId)
         } catch (error) {
-            console.error('Error creating reservation:', error);
-            toast.error('Error creating reservation.');
+            console.error('Error adding booking request to queue', error);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }

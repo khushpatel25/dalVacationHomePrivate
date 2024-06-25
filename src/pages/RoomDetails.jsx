@@ -14,7 +14,8 @@ const RoomDetails = () => {
     const { roomId } = useParams();
     const [room, setRoom] = useState();
     const [feedback, setFeedback] = useState([]);
-    const [resId, setResId] = useState([]);
+    const [resId, setResId] = useState();
+    const [status, setStatus] = useState('unbooked');
 
     const { userRole, userId } = userStore();
 
@@ -27,11 +28,10 @@ const RoomDetails = () => {
                 return res.userId === userId
             }))
 
-            const moreFilter = filterReservations.map(res => {
-                return [res.reservationId]
-            })
-
-            setResId(moreFilter);
+            if (filterReservations.length > 0) {
+                setResId(filterReservations[0].reservationId);
+                setStatus("booked");
+            }
 
         } catch (error) {
             if (error.message !== "Reservation not found") {
@@ -57,27 +57,26 @@ const RoomDetails = () => {
 
     useEffect(() => {
         fetchReservations();
-    }, [])
+    })
 
     if (!room) return <Loader />;
 
     return (
         <div className="p-4">
-            {userRole === "regular" && (
-                <>
-                    {resId?.length > 0 && (
-                        resId?.map((res) => (
-                            <div key={res} className="mt-4 p-4 bg-green-100 text-green-700 mb-3">
-                                You've successfully reserved this room. Your reservation ID is: {res}
-                            </div>
-                        ))
-                    )}
-                </>
+            {(userRole === "regular" && status === "booked") && (
+                <div className="mt-4 p-4 bg-green-100 text-green-700">
+                    You've successfully reserved this room. Your reservation ID is: {resId}
+                </div>
             )}
-
             <div className='flex justify-end'>
-                {userRole === "regular" && (
-                    <CreateReservationModal roomId={roomId} setReservationId={setResId} reservation={resId} />
+            {(userRole === "regular" && status === "unbooked") && (
+                    <CreateReservationModal roomId={roomId} setStatus={setStatus} />
+                )}
+                {(userRole === "regular" && status === "pending") && (
+                    <Button className="mt-2" variant='destructive' disabled={true}>Pending</Button>
+                )}
+                {(userRole === "regular" && status === "booked") && (
+                    <Button className="mt-2" variant='destructive' disabled={true}>Booked</Button>
                 )}
                 {userRole === "admin0" && (
                     <UpdateRoomModal room={room} onRoomUpdated={() => fetchRoomDetails()} />
@@ -118,7 +117,7 @@ const RoomDetails = () => {
                     </div>
                 </div>
             </div>
-            {(resId.length > 0) && (
+            {(resId) && (
                 <div className='flex justify-end mb-4'>
                     <Button variant='destructive'>Add Feedback</Button>
                 </div>
