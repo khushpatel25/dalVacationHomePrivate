@@ -78,6 +78,10 @@ const SignIn = () => {
         }
       } else if (authStage === 3) {
         if (cipherAnswer === cipherSolution) {
+          await axiosInstance.post(import.meta.env.VITE_SEND_SIGNIN_EMAIL_URL, {
+            email,
+            topicArn: import.meta.env.VITE_SNS_TOPIC_ARN
+          })
           const authSession = await fetchAuthSession();
           toast.success('Sign in successful!');
           const userRole = authSession.tokens.idToken.payload["custom:userRole"];
