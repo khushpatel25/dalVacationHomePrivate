@@ -52,7 +52,7 @@ const Home = () => {
   return (
     <>
       {userRole === "admin0" && (
-        <div className='flex justify-center m-4'>
+        <div className='flex justify-center my-4'>
           <AddRoomModal onRoomAdded={fetchAllRooms} />
         </div>
       )}
@@ -60,7 +60,7 @@ const Home = () => {
         ? <div className='flex m-4 justify-center items-center text-4xl'>
           No listing to show...!
         </div>
-        : <div className='grid md:grid-cols-3 grid-cols-1 justify-center gap-3 mx-4 sm:grid-cols-2 mt-4'>
+        : <div className='grid md:grid-cols-3 grid-cols-1 justify-center gap-x-16 gap-y-10 mx-4 my-6 sm:grid-cols-2 '>
           {rooms.map(room => (
             <RoomCard room={room} key={room.roomId} />
           ))}

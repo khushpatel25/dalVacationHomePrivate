@@ -84,7 +84,7 @@ const CreateReservationModal = ({ roomId, setStatus }) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="destructive">Create Reservation</Button>
+                <Button variant="secondary">Create Reservation</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -93,6 +93,7 @@ const CreateReservationModal = ({ roomId, setStatus }) => {
                         Fill all the required details to create a new reservation
                     </DialogDescription>
                 </DialogHeader>
+                <hr/>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="startDate" className="text-right">Start Date</Label>
@@ -105,7 +106,7 @@ const CreateReservationModal = ({ roomId, setStatus }) => {
                         {errors.endDate && <span className="text-red-500 text-xs">{errors.endDate.message}</span>}
                     </div>
                     <DialogFooter>
-                        <Button disabled={loading} variant='destructive' type="submit">Submit</Button>
+                        <Button disabled={loading} type="submit">Submit</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

@@ -8,6 +8,7 @@ import UpdateRoomModal from '@/components/modals/UpdateRoomModal';
 import CreateReservationModal from '@/components/modals/CreateReservationModal';
 import axiosInstance from '@/lib/axiosInstance';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 const RoomDetails = () => {
 
@@ -64,77 +65,85 @@ const RoomDetails = () => {
     return (
         <div className="p-4">
             {(userRole === "regular" && status === "booked") && (
-                <div className="mt-4 p-4 bg-green-100 text-green-700">
+                <div className="my-4 p-4 bg-green-800 text-white font-bold">
                     You've successfully reserved this room. Your reservation ID is: {resId}
                 </div>
             )}
-            <div className='flex justify-end'>
-            {(userRole === "regular" && status === "unbooked") && (
-                    <CreateReservationModal roomId={roomId} setStatus={setStatus} />
-                )}
-                {(userRole === "regular" && status === "pending") && (
-                    <Button className="mt-2" variant='destructive' disabled={true}>Pending</Button>
-                )}
-                {(userRole === "regular" && status === "booked") && (
-                    <Button className="mt-2" variant='destructive' disabled={true}>Booked</Button>
-                )}
-                {userRole === "admin0" && (
-                    <UpdateRoomModal room={room} onRoomUpdated={() => fetchRoomDetails()} />
-                )}
-            </div>
-            <div className="flex justify-center">
-                    <span className=" bg-white text-3xl font-bold text-center shadow-lg rounded-lg overflow-hidden mb-6 px-10 py-2">{room.roomNumber}</span>  
-            </div>
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden mb-6">
-                <div className="p-6">
-                    <p className="text-2xl font-bold mb-4">Description:</p>
-                    <p className="text-gray-600">{room.description}</p>
-                </div>
-            </div>
-
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h2 className="text-2xl font-bold mb-4">Details:</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center">
-                        <span className="text-gray-700">Tariff:</span>
-                        <span className="ml-2 font-bold">${room.tariff}</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="text-gray-700">Capacity:</span>
-                        <span className="ml-2 font-bold">{room.capacity} persons</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="text-gray-700">Amenities:</span>
-                        <div className="ml-2 text-gray-800">
-                            {room.amenities.map((amenity, index) => (
-                                <span className='font-bold' key={index}>{amenity}, </span>
-                            ))}
+            <Card className="w-full max-w-2xl mx-auto my-3">
+                <CardHeader className="bg-black text-primary-foreground p-6 rounded-t-lg ">
+                    <div className='flex justify-between items-center'>
+                        <h1 className="text-4xl font-bold text-white">Room {room.roomNumber}</h1>
+                        <div className='flex justify-end'>
+                            {(userRole === "regular" && status === "unbooked") && (
+                                <CreateReservationModal roomId={roomId} setStatus={setStatus} />
+                            )}
+                            {(userRole === "regular" && status === "pending") && (
+                                <Button className="mt-2" variant='secondary' disabled={true}>Pending</Button>
+                            )}
+                            {(userRole === "regular" && status === "booked") && (
+                                <Button className="mt-2" variant='secondary' disabled={true}>Booked</Button>
+                            )}
+                            {userRole === "admin0" && (
+                                <UpdateRoomModal room={room} onRoomUpdated={() => fetchRoomDetails()} />
+                            )}
                         </div>
                     </div>
-                    <div className="flex items-center">
-                        <span className="text-gray-700">RoomType:</span>
-                        <span className="ml-2 font-bold">{room.roomType}</span>
+                </CardHeader>
+                <CardContent className="p-6 grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold">{room.roomType.toUpperCase()} Room</h2>
+                        <p className="text-muted-foreground">
+                            {room.description}
+                        </p>
                     </div>
-                </div>
-            </div>
-            {(resId) && (
-                <div className='flex justify-end mb-4'>
-                    <Button variant='destructive'>Add Feedback</Button>
-                </div>
-            )}
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h2 className="text-2xl font-bold mb-4">Feedback</h2>
-                {feedback.length > 0 ? (
-                    feedback.map((item, index) => (
-                        <div key={index} className="border-b border-gray-200 pb-4 mb-4">
-                            <p className="text-gray-700 mb-2">{item.feedbackText}</p>
-                            <p className="text-gray-500 text-sm">Polarity: {item.sentiment}</p>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Tariff:</span>
+                            <span className="font-semibold">${room.tariff}/night</span>
                         </div>
-                    ))
-                ) : (
-                    <p className="text-gray-700">No feedback available.</p>
-                )}
-            </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Capacity:</span>
+                            <span className="font-semibold">{room.capacity} adults</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-muted-foreground">Room Type:</span>
+                            <span className="font-semibold">{room.roomType.toUpperCase()}</span>
+                        </div>
+                    </div>
+                </CardContent>
+                <CardContent className="p-6 border-t">
+                    <h3 className="text-xl font-semibold mb-2">Amenities</h3>
+                    <ul className="grid grid-cols-2 gap-2 text-muted-foreground">
+                        {room.amenities.map((amenity, index) => (
+                            <li className='font-thin' key={index}>{amenity}</li>
+                        ))}
+                    </ul>
+                </CardContent>
+                <CardContent className="p-6 border-t">
+                    <div className='flex justify-between items-center mb-2'>
+                        <h3 className="text-xl font-semibold">Feedback</h3>
+                        {(resId) && (
+                            <div className='flex justify-end mb-4'>
+                                <Button>Add Feedback</Button>
+                            </div>
+                        )}
+                    </div>
+                    <div className="grid gap-4">
+                        <div className="flex flex-col gap-4">
+                            {feedback.length > 0 ? (
+                                feedback.map((item, index) => (
+                                    <div key={index} className="border-b border-gray-200 pb-4 mb-4">
+                                        <p className="text-gray-700 mb-2">{item.feedbackText}</p>
+                                        <p className="text-gray-900 text-sm">Polarity: <span className='font-semibold'>{item.sentiment}</span></p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-700">No feedback available.</p>
+                            )}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };

@@ -95,7 +95,7 @@ const UpdateRoomModal = ({ room ,onRoomUpdated}) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-            <Button variant="destructive">Update Room</Button>
+            <Button variant="secondary">Update Room</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -104,6 +104,7 @@ const UpdateRoomModal = ({ room ,onRoomUpdated}) => {
                         Update the details of the room
                     </DialogDescription>
                 </DialogHeader>
+                <hr/>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="roomNumber" className="text-right">RoomNumber</Label>
@@ -138,7 +139,7 @@ const UpdateRoomModal = ({ room ,onRoomUpdated}) => {
                         {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
                     </div>
                     <DialogFooter>
-                    <Button disabled={loading} variant='destructive' type="submit">Submit</Button>
+                    <Button disabled={loading}  type="submit">Submit</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

@@ -87,7 +87,7 @@ const AddRoomModal = ({ onRoomAdded }) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="destructive">Add Room</Button>
+                <Button >Add Room</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -96,6 +96,7 @@ const AddRoomModal = ({ onRoomAdded }) => {
                         Fill all the required details to add a new room
                     </DialogDescription>
                 </DialogHeader>
+                <hr/>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="roomNumber" className="text-right">Room Number</Label>
@@ -136,7 +137,7 @@ const AddRoomModal = ({ onRoomAdded }) => {
                         {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
                     </div>
                     <DialogFooter>
-                        <Button disabled={loading} variant='destructive' type="submit">Submit</Button>
+                        <Button disabled={loading} type="submit">Submit</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
