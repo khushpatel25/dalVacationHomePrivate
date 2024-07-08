@@ -9,6 +9,7 @@ import CreateReservationModal from '@/components/modals/CreateReservationModal';
 import axiosInstance from '@/lib/axiosInstance';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import AddFeedbackModal from '@/components/modals/AddFeedbackModal';
 
 const RoomDetails = () => {
 
@@ -52,8 +53,21 @@ const RoomDetails = () => {
         }
     };
 
+    const fetchFeedbacks = async () => {
+        try {
+            const feedbackResponse = await axiosInstance.get(import.meta.env.VITE_FETCH_FEEDBACK_URL + `?roomId=${roomId}`)
+            setFeedback(JSON.parse(feedbackResponse.data.body));
+        } catch (error) {
+            if (error.message !== "Feedback is not found for given roomId!") {
+                console.error("Error while fetching feedbacks", error)
+                toast.error(error.message);
+            }
+        }
+    }
+
     useEffect(() => {
         fetchRoomDetails();
+        fetchFeedbacks();
     }, [roomId, userId]);
 
     useEffect(() => {
@@ -124,7 +138,7 @@ const RoomDetails = () => {
                         <h3 className="text-xl font-semibold">Feedback</h3>
                         {(resId) && (
                             <div className='flex justify-end mb-4'>
-                                <Button>Add Feedback</Button>
+                                <AddFeedbackModal roomId={roomId} userId={userId} onFeedbackAdded={fetchFeedbacks}/>
                             </div>
                         )}
                     </div>
