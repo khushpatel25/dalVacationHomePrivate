@@ -80,7 +80,6 @@ const SignUp = () => {
           }
         });
         await axiosInstance.post(import.meta.env.VITE_SEND_CONFIRMATION_EMAIL_URL, {
-          topicArn: import.meta.env.VITE_SNS_TOPIC_ARN,
           email
         })
         alert("Check your email to confirm SNS subscription.")
@@ -91,10 +90,14 @@ const SignUp = () => {
           question,
           answer
         });
-        await axiosInstance.post(import.meta.env.VITE_COGNITO_CONFIRM_USER_URL, {
-          "userPoolId": import.meta.env.VITE_AWS_USER_POOLS_ID,
-          "username": email
-        });
+        try {
+          await axiosInstance.post(import.meta.env.VITE_COGNITO_CONFIRM_USER_URL, {
+            "userPoolId": import.meta.env.VITE_AWS_USER_POOLS_ID,
+            "username": email
+          });
+        } catch (error) {
+          console.log("Confirmed")
+        }
         toast.success('Sign up successful!');
         navigate('/signin');
       }
