@@ -89,7 +89,7 @@ const RoomDetails = () => {
                         <h1 className="text-4xl font-bold text-white">Room {room.roomNumber}</h1>
                         <div className='flex justify-end'>
                             {(userRole === "regular" && status === "unbooked") && (
-                                <CreateReservationModal roomId={roomId} setStatus={setStatus} />
+                                <CreateReservationModal roomId={roomId} roomNumber={room.roomNumber} setStatus={setStatus} />
                             )}
                             {(userRole === "regular" && status === "pending") && (
                                 <Button className="mt-2" variant='secondary' disabled={true}>Pending</Button>

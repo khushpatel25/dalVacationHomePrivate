@@ -31,7 +31,7 @@ const reservationSchema = z
     });
 
 
-const CreateReservationModal = ({ roomId, setStatus }) => {
+const CreateReservationModal = ({ roomId, setStatus, roomNumber }) => {
 
     const { userId } = userStore();
     const { addReservationId } = useReservationStore();
@@ -63,7 +63,8 @@ const CreateReservationModal = ({ roomId, setStatus }) => {
                     roomId,
                     userId,
                     startDate,
-                    endDate
+                    endDate,
+                    roomNumber
                 }
             });
 
