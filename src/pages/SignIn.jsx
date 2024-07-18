@@ -15,9 +15,9 @@ import axiosInstance from '@/lib/axiosInstance';
 Amplify.configure(amplifyOutput);
 
 const SignIn = () => {
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState(null);
   const [userAnswer, setUserAnswer] = useState('');
-  const [cipherChallenge, setCipherChallenge] = useState('');
+  const [cipherChallenge, setCipherChallenge] = useState(null);
   const [cipherAnswer, setCipherAnswer] = useState('');
   const [authStage, setAuthStage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -136,7 +136,11 @@ const SignIn = () => {
         )}
         {authStage === 2 && (
           <>
-            <div>{question}</div>
+            {!question ?
+              <div>Loading...</div>
+              :
+              <div>{question}</div>
+            }
             <div>
               <Label htmlFor="securityAnswer">Answer</Label>
               <Input
@@ -153,7 +157,11 @@ const SignIn = () => {
         )}
         {authStage === 3 && (
           <>
-            <div>{cipherChallenge}</div>
+          {!cipherChallenge ?
+              <div>Loading...</div>
+              :
+              <div>{cipherChallenge}</div>
+            }
             <div>
               <Label htmlFor="cipherSolution">Solve the cipher</Label>
               <Input

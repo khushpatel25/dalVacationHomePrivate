@@ -3,7 +3,7 @@ import React from 'react';
 const Dashboard = () => {
   return (
     <div classname="flex justify-center items-center h-16">
-      <div className="text-center font-semibold text-4xl">Dashboard</div>
+      <div className="text-center font-semibold text-4xl my-3">Dashboard</div>
       <iframe
         title="Looker Studio Report"
         width="100%"
