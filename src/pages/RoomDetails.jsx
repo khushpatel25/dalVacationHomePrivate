@@ -148,7 +148,7 @@ const RoomDetails = () => {
                                 feedback.map((item, index) => (
                                     <div key={index} className="border-b border-gray-200 pb-4 mb-4">
                                         <p className="text-gray-700 mb-2">{item.feedbackText}</p>
-                                        <p className="text-gray-900 text-sm">Polarity: <span className='font-semibold'>{item.sentiment}</span></p>
+                                        <p className="text-gray-900 text-sm">Polarity: <Button className={`cursor-auto ${item.sentiment === "POSITIVE" && 'bg-green-900'} ${item.sentiment === "NEGATIVE" && 'bg-red-900'}`}  size="sm" variant="custom">{item.sentiment}</Button></p>
                                     </div>
                                 ))
                             ) : (
