@@ -22,7 +22,7 @@ const feedbackSchema = z.object({
     feedbackText: z.string().min(1, "Feedback must have at least 1 character")
 })
 
-const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded }) => {
+const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded, roomNumber }) => {
 
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,8 @@ const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded }) => {
             const res = await axiosInstance.post(import.meta.env.VITE_CREATE_FEEDBACK_URL, {
                 feedbackText: data.feedbackText,
                 roomId,
-                userId
+                userId,
+                roomNumber
             })
             setIsOpen(false);
             toast.success("Feedback added successfully.")

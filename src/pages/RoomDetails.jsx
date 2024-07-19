@@ -138,7 +138,7 @@ const RoomDetails = () => {
                         <h3 className="text-xl font-semibold">Feedback</h3>
                         {(resId) && (
                             <div className='flex justify-end mb-4'>
-                                <AddFeedbackModal roomId={roomId} userId={userId} onFeedbackAdded={fetchFeedbacks}/>
+                                <AddFeedbackModal roomNumber={room.roomNumber} roomId={roomId} userId={userId} onFeedbackAdded={fetchFeedbacks}/>
                             </div>
                         )}
                     </div>
