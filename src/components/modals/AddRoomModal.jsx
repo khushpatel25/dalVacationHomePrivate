@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axiosInstance from '@/lib/axiosInstance';
+import userStore from '@/lib/store/userStore';
 
 const roomSchema = z.object({
     roomNumber: z
@@ -39,6 +40,9 @@ const AddRoomModal = ({ onRoomAdded }) => {
 
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const { userId } = userStore();
+    
+    console.log({userId})
 
     const {
         register,
@@ -59,7 +63,7 @@ const AddRoomModal = ({ onRoomAdded }) => {
                 roomNumber: Number(data.roomNumber),
                 tariff: Number(data.tariff),
                 capacity: Number(data.capacity),
-                amenities: data.amenities.split(',').map(amenity => amenity.trim())
+                amenities: data.amenities.split(',').map(amenity => amenity.trim()),
             };
 
             const { roomType, tariff, capacity, amenities, description, roomNumber } = transformedData;
@@ -70,7 +74,8 @@ const AddRoomModal = ({ onRoomAdded }) => {
                 capacity,
                 amenities,
                 description,
-                roomNumber
+                roomNumber,
+                userId
             })
 
             toast.success("Room added successfully.")

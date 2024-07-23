@@ -2,7 +2,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { eachDayOfInterval, differenceInDays } from 'date-fns';
+
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import userStore from '@/lib/store/userStore';
 import useReservationStore from '@/lib/store/reservationStore';
 import axiosInstance from '@/lib/axiosInstance';
+import { DateRange } from 'react-date-range';
 
 const reservationSchema = z
     .object({
@@ -30,19 +36,28 @@ const reservationSchema = z
         path: ["endDate"]
     });
 
+const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection'
+};
 
-const CreateReservationModal = ({ roomId, setStatus, roomNumber }) => {
+const CreateReservationModal = ({ roomId, setStatus, roomNumber, disDates }) => {
 
     const { userId } = userStore();
     const { addReservationId } = useReservationStore();
 
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [dateRange, setDateRange] = useState(initialDateRange);
+    // const [disDates, setDisDates] = useState([]);
 
     const {
         register,
+        watch,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue
     } = useForm({
         resolver: zodResolver(reservationSchema)
     });
@@ -52,18 +67,51 @@ const CreateReservationModal = ({ roomId, setStatus, roomNumber }) => {
         setStatus("pending");
     }
 
-    const onSubmit = async (data) => {
+    // console.log({ existingReservations })
+
+
+
+    // const disabledDates = () => {
+    //     let dates = [];
+
+    //     existingReservations.forEach((reservation) => {
+    //         const range = eachDayOfInterval({
+    //             start: new Date(new Date(reservation.startDate)),
+    //             end: new Date(new Date(reservation.endDate))
+    //         });
+    //         console.log({ range })
+    //         dates = [...dates, ...range];
+    //     })
+    //     console.log({ dates });
+    //     setDisDates(dates);
+
+    // };
+
+    // console.log({ dateRange })
+
+    // useEffect(() => {
+    //     if (dateRange.startDate && dateRange.endDate) {
+    //         const dayCount = differenceInDays(
+    //             dateRange.endDate,
+    //             dateRange.startDate
+    //         );
+    //     }
+    //     // disabledDates();
+    // }, [dateRange]);
+
+    // useEffect(() => {
+    // }, [])
+
+    const onSubmit = async () => {
         try {
             setLoading(true);
-
-            const { startDate, endDate } = data;
 
             const res = await axiosInstance.post(import.meta.env.VITE_CREATE_RESERVATION_URL, {
                 bookingDetails: {
                     roomId,
                     userId,
-                    startDate,
-                    endDate,
+                    startDate: dateRange.startDate,
+                    endDate: dateRange.endDate,
                     roomNumber
                 }
             });
@@ -82,6 +130,18 @@ const CreateReservationModal = ({ roomId, setStatus, roomNumber }) => {
         }
     };
 
+    console.log({ disDates })
+
+    const handleOnChange = (value) => {
+        console.log(value.selection.startDate)
+        setDateRange({
+            startDate: value.selection.startDate,
+            endDate: value.selection.endDate,
+            key: 'selection'
+        });
+    }
+
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -91,25 +151,25 @@ const CreateReservationModal = ({ roomId, setStatus, roomNumber }) => {
                 <DialogHeader>
                     <DialogTitle>Create Reservation</DialogTitle>
                     <DialogDescription>
-                        Fill all the required details to create a new reservation
+                        Select the dates
                     </DialogDescription>
                 </DialogHeader>
-                <hr/>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="startDate" className="text-right">Start Date</Label>
-                        <Input id="startDate" type="date" {...register('startDate')} className="col-span-3" />
-                        {errors.startDate && <span className="text-red-500 text-xs">{errors.startDate.message}</span>}
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="endDate" className="text-right">End Date</Label>
-                        <Input id="endDate" type="date" {...register('endDate')} className="col-span-3" />
-                        {errors.endDate && <span className="text-red-500 text-xs">{errors.endDate.message}</span>}
-                    </div>
-                    <DialogFooter>
-                        <Button disabled={loading} type="submit">Submit</Button>
-                    </DialogFooter>
-                </form>
+                <hr />
+                <DateRange
+                    rangeColors={['#262626']}
+                    ranges={[dateRange]}
+                    date={new Date()}
+                    onChange={handleOnChange}
+                    direction="vertical"
+                    showDateDisplay={false}
+                    minDate={new Date()}
+                    disabledDates={disDates}
+                />
+
+                <DialogFooter>
+                    <Button disabled={loading} onClick={onSubmit}>Submit</Button>
+                </DialogFooter>
+
             </DialogContent>
         </Dialog>
     )
