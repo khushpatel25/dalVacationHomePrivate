@@ -44,6 +44,8 @@ const SignIn = () => {
     }
   };
 
+  console.log("hhe")
+
   const getCeaserCipherChallenge = async (email) => {
     try {
       const res = await axiosInstance.get(import.meta.env.VITE_FETCH_CIPHER_URL + `?userId=${email}`);
