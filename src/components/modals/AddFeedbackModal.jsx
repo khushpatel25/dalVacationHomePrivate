@@ -76,7 +76,7 @@ const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded, roomNumber }) => {
                         {errors.feedbackText && <span className="text-red-500 text-xs col-span-4">{errors.feedbackText.message}</span>}
                     </div>
                     <DialogFooter>
-                        <Button disabled={loading} variant='destructive' type="submit">Submit</Button>
+                        <Button disabled={loading}  type="submit">Submit</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
