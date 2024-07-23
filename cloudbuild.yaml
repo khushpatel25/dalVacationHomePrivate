@@ -13,7 +13,7 @@ steps:
 
   # Push the container image to Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_IMAGE_NAME}:${SHORT_SHA}"]
+    args: ["push","--all-tags", "${_IMAGE_NAME}"]
 
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
