@@ -13,6 +13,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const { userRole } = userStore();
 
+  console.log({rooms})
+
   useEffect(() => {
     fetchAllRooms();
   }, [])
