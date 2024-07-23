@@ -34,7 +34,7 @@ substitutions:
   _IMAGE_NAME: "us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-sdp4/dal-vacation-home-app"
 
 images:
-  - "us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-sdp4/dal-vacation-home-app:${SHORT_SHA}"
+  - "us-central1-docker.pkg.dev/${PROJECT_ID}/serverless-dalvacationhome/dal-vacation-home-sdp4:${SHORT_SHA}"
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
