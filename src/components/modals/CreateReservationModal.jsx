@@ -106,7 +106,7 @@ const CreateReservationModal = ({ roomId, setStatus, roomNumber, disDates }) => 
         try {
             setLoading(true);
 
-            const res = await axiosInstance.post(import.meta.env.VITE_CREATE_RESERVATION_URL, {
+            const res = await axiosInstance.post("https://ysyv7uxywd.execute-api.us-east-1.amazonaws.com/bookingReq/addBookingRequest", {
                 bookingDetails: {
                     roomId,
                     userId,

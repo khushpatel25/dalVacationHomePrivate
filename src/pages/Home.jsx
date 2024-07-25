@@ -20,7 +20,7 @@ const Home = () => {
   const fetchAllRooms = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(import.meta.env.VITE_FETCH_ALL_ROOMS_URL);
+      const res = await axiosInstance.get("https://z6fffkei3a.execute-api.us-east-1.amazonaws.com/roomStage/getAllRooms");
       const parsedBody = JSON.parse(res?.data?.body);
       const transformBody = parsedBody.map(item => {
         return {

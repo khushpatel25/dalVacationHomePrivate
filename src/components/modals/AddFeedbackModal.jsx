@@ -38,7 +38,7 @@ const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded, roomNumber }) => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-            const res = await axiosInstance.post(import.meta.env.VITE_CREATE_FEEDBACK_URL, {
+            const res = await axiosInstance.post("https://ew0w9pmr1i.execute-api.us-east-1.amazonaws.com/feedbackStage/createFeedback", {
                 feedbackText: data.feedbackText,
                 roomId,
                 userId,

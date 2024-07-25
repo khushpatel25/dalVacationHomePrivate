@@ -35,7 +35,7 @@ const SignIn = () => {
 
   const securityQuestion = async (email) => {
     try {
-      const res = await axiosInstance.get(import.meta.env.VITE_GET_SECURITY_QUESTION_URL + `?userId=${email}`);
+      const res = await axiosInstance.get("https://fechrne8y6.execute-api.us-east-1.amazonaws.com/default/logSecurityQuestionToDynamoDb" + `?userId=${email}`);
       const data = JSON.parse(res.data?.body);
       setQuestion(data?.question);
       setUserAnswer(data?.answer);
@@ -46,7 +46,7 @@ const SignIn = () => {
 
   const getCeaserCipherChallenge = async (email) => {
     try {
-      const res = await axiosInstance.get(import.meta.env.VITE_FETCH_CIPHER_URL + `?userId=${email}`);
+      const res = await axiosInstance.get("https://fechrne8y6.execute-api.us-east-1.amazonaws.com/default/getCeaserCipherChallenge" + `?userId=${email}`);
       const data = JSON.parse(res.data.body);
       console.log(data);
       setCipherChallenge(data.clue);
@@ -78,7 +78,7 @@ const SignIn = () => {
         }
       } else if (authStage === 3) {
         if (cipherAnswer === cipherSolution) {
-          await axiosInstance.post(import.meta.env.VITE_SEND_SIGNIN_EMAIL_URL, {
+          await axiosInstance.post("https://13vrr73rb7.execute-api.us-east-1.amazonaws.com/sendEmail/signIn", {
             email
           })
           const authSession = await fetchAuthSession();

@@ -26,7 +26,7 @@ const RoomDetails = () => {
 
     const fetchReservations = async () => {
         try {
-            const res = await axiosInstance.get(import.meta.env.VITE_FETCH_RESERVATION_BY_ROOM_ID_URL + `?roomId=${roomId}`);
+            const res = await axiosInstance.get("https://r764pd4h2b.execute-api.us-east-1.amazonaws.com/reservationStage/fetchReservationByRoomId" + `?roomId=${roomId}`);
             const parsedBody = JSON.parse(res.data.body);
 
 
@@ -65,7 +65,7 @@ const RoomDetails = () => {
 
     const fetchRoomDetails = async () => {
         try {
-            const response = await axiosInstance.get(import.meta.env.VITE_FETCH_ROOM_DETAILS_URL + `?roomId=${roomId}`);
+            const response = await axiosInstance.get("https://z6fffkei3a.execute-api.us-east-1.amazonaws.com/roomStage/getRoom" + `?roomId=${roomId}`);
             setRoom(JSON.parse(response.data.body));
         } catch (error) {
             console.error("Error while fetching roomDetails: ", error);
@@ -75,7 +75,7 @@ const RoomDetails = () => {
 
     const fetchFeedbacks = async () => {
         try {
-            const feedbackResponse = await axiosInstance.get(import.meta.env.VITE_FETCH_FEEDBACK_URL + `?roomId=${roomId}`)
+            const feedbackResponse = await axiosInstance.get("https://ew0w9pmr1i.execute-api.us-east-1.amazonaws.com/feedbackStage/getFeedback" + `?roomId=${roomId}`)
             setFeedback(JSON.parse(feedbackResponse.data.body));
         } catch (error) {
             if (error.message !== "Feedback is not found for given roomId!") {

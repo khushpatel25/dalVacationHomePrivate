@@ -79,19 +79,19 @@ const SignUp = () => {
             },
           }
         });
-        await axiosInstance.post(import.meta.env.VITE_SEND_CONFIRMATION_EMAIL_URL, {
+        await axiosInstance.post("https://yj8plk4b2b.execute-api.us-east-1.amazonaws.com/confirmEmail/", {
           email
         })
         alert("Check your email to confirm SNS subscription.")
         setAuthStage(2)
       } else if (authStage === 2) {
-        await axiosInstance.post(import.meta.env.VITE_POST_SECURITY_QUESTION_URL, {
+        await axiosInstance.post("https://fechrne8y6.execute-api.us-east-1.amazonaws.com/default/logSecurityQuestionToDynamoDb", {
           email,
           question,
           answer
         });
         try {
-          await axiosInstance.post(import.meta.env.VITE_COGNITO_CONFIRM_USER_URL, {
+          await axiosInstance.post("https://vzsqhdlka6.execute-api.us-east-1.amazonaws.com/default/confirmUser", {
             "userPoolId": import.meta.env.VITE_AWS_USER_POOLS_ID,
             "username": email
           });
