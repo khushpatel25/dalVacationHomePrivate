@@ -34,9 +34,14 @@ const Navbar = () => {
       </span>
       <div className="ml-auto flex gap-2">
         {userRole && userRole === "admin0" && (
+          <>
           <Link to="/dashboard">
-            <Button className="font-semibold ">Dashboard</Button>
+            <Button className="font-semibold">Dashboard</Button>
           </Link>
+          <Link to="/cutomerconcerns">
+            <Button className="font-semibold">Customer Concerns</Button>
+          </Link>
+        </>
         )}
         {!userRole ? (
           <>
