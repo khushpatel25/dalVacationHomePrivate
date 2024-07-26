@@ -83,6 +83,7 @@ const SignIn = () => {
           })
           const authSession = await fetchAuthSession();
           toast.success('Sign in successful!');
+          console.log(authSession?.tokens)
           const userRole = authSession.tokens.idToken.payload["custom:userRole"];
           const idToken = authSession.tokens.idToken.toString();
           const userId = authSession.tokens.idToken.payload["email"];
