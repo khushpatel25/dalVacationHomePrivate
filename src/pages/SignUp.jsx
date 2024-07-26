@@ -92,7 +92,7 @@ const SignUp = () => {
         });
         try {
           await axiosInstance.post("https://vzsqhdlka6.execute-api.us-east-1.amazonaws.com/default/confirmUser", {
-            "userPoolId": import.meta.env.VITE_AWS_USER_POOLS_ID,
+            "userPoolId": "us-east-1_vBpnvz7le",
             "username": email
           });
         } catch (error) {
