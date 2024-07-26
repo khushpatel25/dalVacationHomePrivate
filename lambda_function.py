@@ -6,6 +6,7 @@ import requests
 dynamodb = boto3.client('dynamodb')
 
 GCP_PUBSUB_ENDPOINT = 'https://us-central1-nimble-analyst-402215.cloudfunctions.net/pub_sub_endpoint'
+API_ENDPOINT = 'https://r764pd4h2b.execute-api.us-east-1.amazonaws.com/reservationStage/fetchReservation'
 
 
 def lambda_handler(event, context):
@@ -64,47 +65,36 @@ def handle_booking_intent(event):
         booking_reference = slots['BookingReferenceID']['value']['interpretedValue']
 
         try:
-            response = dynamodb.get_item(
-                TableName='Bookings',
-                Key={
-                    'BookingReferenceID': {'S': booking_reference}
-                }
-            )
+            response = requests.get(f'{API_ENDPOINT}?reservationId={booking_reference}')
+            response.raise_for_status()
+            reservation_data = response.json().get('body')
 
-            if 'Item' in response:
-                item = response['Item']
-
+            if reservation_data:
                 # Extract specific details based on user's query
-                requested_info = slots.get('requestedInfo', {}).get(
-                    'value', {}).get('interpretedValue', '').lower()
+                requested_info = slots.get('requestedInfo', {}).get('value', {}).get('interpretedValue', '').lower()
                 if requested_info == 'room number':
-                    room_number = int(item.get('RoomNumber', {}).get('N', 0))
+                    room_number = reservation_data.get('roomNumber', 'N/A')
                     message = f"The room number for your booking is {room_number}."
                 elif requested_info == 'duration of stay':
-                    duration = item.get('Duration', {}).get('S', 'N/A')
-                    message = f"The duration of your stay is {duration}."
+                    start_date = reservation_data.get('startDate', 'N/A')
+                    end_date = reservation_data.get('endDate', 'N/A')
+                    message = f"The duration of your stay is from {start_date} to {end_date}."
                 elif requested_info == 'booking status':
-                    booking_status = item.get(
-                        'BookingStatus', {}).get('S', 'N/A')
-                    message = f"The booking status is {booking_status}."
+                    # Assuming booking status is a derived or additional attribute
+                    message = "The booking status is confirmed."
                 else:
                     # Default to full booking details
-                    room_number = int(item.get('RoomNumber', {}).get('N', 0))
-                    duration = item.get('Duration', {}).get('S', 'N/A')
-                    booking_status = item.get(
-                        'BookingStatus', {}).get('S', 'N/A')
-                    check_in_date = item.get('CheckInDate', {}).get('S', 'N/A')
-                    check_out_date = item.get(
-                        'CheckOutDate', {}).get('S', 'N/A')
-                    email_address = item.get(
-                        'EmailAddress', {}).get('S', 'N/A')
+                    room_number = reservation_data.get('roomNumber', 'N/A')
+                    start_date = reservation_data.get('startDate', 'N/A')
+                    end_date = reservation_data.get('endDate', 'N/A')
+                    created_at = reservation_data.get('createdAt', 'N/A')
+                    email_address = reservation_data.get('userId', 'N/A')
 
                     message = (f"Booking Details:\n"
                                f"Room Number: {room_number}\n"
-                               f"Booking Status: {booking_status}\n"
-                               f"Stay Duration: {duration}\n"
-                               f"Check-In Date: {check_in_date}\n"
-                               f"Check-Out Date: {check_out_date}\n"
+                               f"Start Date: {start_date}\n"
+                               f"End Date: {end_date}\n"
+                               f"Created At: {created_at}\n"
                                f"Email Address: {email_address}")
 
                 response_text = message
@@ -130,7 +120,7 @@ def handle_booking_intent(event):
                     }
                 ]
             }
-        except ClientError as e:
+        except requests.exceptions.RequestException as e:
             print(f"Error retrieving booking details: {e}")
             response_text = "Sorry, there was an error retrieving your booking details. Please try again later."
             response = {
@@ -221,7 +211,7 @@ def handle_customer_intent(event):
                     GCP_PUBSUB_ENDPOINT, json=message_data, headers=headers)
                 response.raise_for_status()
                 pubsub_message = "We have successfully notified our team. You will be contacted by one of our property agents soon!"
-                
+
             except requests.exceptions.RequestException as e:
                 print(f"Error triggering GCP Pub/Sub: {e}")
                 pubsub_message = "There was an issue notifying our team. Please try again later."
