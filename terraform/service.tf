@@ -19,7 +19,7 @@ resource "google_cloudbuild_trigger" "dalVacation-trigger" {
     owner = "khushpatel25"
     name = "dalVacationHomePrivate"
     push {
-      branch = ".*"
+      branch = "^main$"
     }
   }
 
