@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const CustomerConcerns = () => {
@@ -33,10 +33,15 @@ const CustomerConcerns = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-3">
+      <div className="text-center font-semibold text-5xl mb-3">
+        Customer Concerns
+      </div>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && concerns.length === 0 && <p>No concerns available</p>}
+      {!loading && !error && concerns.length === 0 && (
+        <p>No concerns available</p>
+      )}
       {!loading && !error && concerns.length > 0 && (
         <div className="space-y-4">
           {concerns.map((concern, index) => (
@@ -44,22 +49,21 @@ const CustomerConcerns = () => {
               key={index}
               className="p-4 border rounded-lg shadow-md bg-white"
             >
-              <p className="font-bold">Customer Email: {concern.EmailAddress}</p>
-              <p className="font-semibold">Assigned Agent: {concern.AgentEmail}</p>
+              <p className="font-bold">
+                Customer Email: {concern.EmailAddress}
+              </p>
+              <p className="font-semibold">
+                Assigned Agent: {concern.AgentEmail}
+              </p>
               <p>Concern: {concern.CustomerConcern}</p>
-              <Button
-                onClick={() => notifyAgent(concern.AgentEmail)}
-              >
+              <Button onClick={() => notifyAgent(concern.AgentEmail)}>
                 Notify Agent
               </Button>
             </div>
           ))}
         </div>
       )}
-      <Button
-        className="mt-4"
-        onClick={() => window.location.reload()}
-      >
+      <Button className="mt-4" onClick={() => window.location.reload()}>
         Refresh
       </Button>
     </div>

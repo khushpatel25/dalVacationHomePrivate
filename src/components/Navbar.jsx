@@ -1,12 +1,13 @@
+import userStore from "@/lib/store/userStore";
 import { signOut } from "aws-amplify/auth";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
-
-import userStore from "@/lib/store/userStore";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
 const Navbar = () => {
   const { userRole, deleteUserRoleAndId } = userStore();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const logout = async () => {
     try {
@@ -15,6 +16,7 @@ const Navbar = () => {
         await signOut();
         deleteUserRoleAndId();
         toast.success("SignOut Successful.");
+        navigate("/");
       }
     } catch (error) {
       toast.error(error.message);
@@ -35,25 +37,29 @@ const Navbar = () => {
       <div className="ml-auto flex gap-2">
         {userRole && userRole === "admin0" && (
           <>
-          <Link to="/dashboard">
-            <Button className="font-semibold">Dashboard</Button>
-          </Link>
-          <Link to="/cutomerconcerns">
-            <Button className="font-semibold">Customer Concerns</Button>
-          </Link>
-        </>
+            {location.pathname !== "/dashboard" && (
+              <Link to="/dashboard">
+                <Button className="font-semibold">Dashboard</Button>
+              </Link>
+            )}
+            {location.pathname !== "/customerconcerns" && (
+              <Link to="/customerconcerns">
+                <Button className="font-semibold">Customer Concerns</Button>
+              </Link>
+            )}
+          </>
         )}
         {!userRole ? (
           <>
             <Link to="/signin">
-              <Button className="font-semibold ">Sign In</Button>
+              <Button className="font-semibold">Sign In</Button>
             </Link>
             <Link to="/signup">
               <Button className="font-semibold">Sign Up</Button>
             </Link>
           </>
         ) : (
-          <Button onClick={logout} className="font-bold ">
+          <Button onClick={logout} className="font-bold">
             Sign Out
           </Button>
         )}
