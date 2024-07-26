@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import RoomDetails from "./pages/RoomDetails";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import CustomerConcerns from "./pages/CustomerConcerns";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/rooms/:roomId" element={<RoomDetails/>} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/cutomerconcerns" element={<CustomerConcerns/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

@@ -38,7 +38,7 @@ const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded, roomNumber }) => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-            const res = await axiosInstance.post(import.meta.env.VITE_CREATE_FEEDBACK_URL, {
+            const res = await axiosInstance.post("https://ew0w9pmr1i.execute-api.us-east-1.amazonaws.com/feedbackStage/createFeedback", {
                 feedbackText: data.feedbackText,
                 roomId,
                 userId,
@@ -76,7 +76,7 @@ const AddFeedbackModal = ({ roomId, userId, onFeedbackAdded, roomNumber }) => {
                         {errors.feedbackText && <span className="text-red-500 text-xs col-span-4">{errors.feedbackText.message}</span>}
                     </div>
                     <DialogFooter>
-                        <Button disabled={loading} variant='destructive' type="submit">Submit</Button>
+                        <Button disabled={loading}  type="submit">Submit</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

@@ -1,29 +1,40 @@
 steps:
   # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '${IMAGE_NAME}:${SHORT_SHA}', '-t', '${IMAGE_NAME}:latest', '.']
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_IMAGE_NAME}:${SHORT_SHA}",
+        "-t",
+        "${_IMAGE_NAME}:latest",
+        ".",
+      ]
 
   # Push the container image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '${IMAGE_NAME}:${SHORT_SHA}']
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "--all-tags", "${_IMAGE_NAME}"]
 
   # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'dal-vacation-home-app'
-    - '--image'
-    - '${IMAGE_NAME}:${SHORT_SHA}'
-    - '--region'
-    - 'us-central1'
-    - '--platform'
-    - 'managed'
-    - '--allow-unauthenticated'
+      - "run"
+      - "deploy"
+      - "dal-vacation-home-app"
+      - "--image"
+      - "${_IMAGE_NAME}:${SHORT_SHA}"
+      - "--region"
+      - "us-central1"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated"
 
 substitutions:
-  IMAGE_NAME: "us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-repo/dal-vacation-home-app"
+  _IMAGE_NAME: "us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-sdp4/dal-vacation-home-app"
 
 images:
-  - 'us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-repo/dal-vacation-home-app:${SHORT_SHA}'
+  - "us-central1-docker.pkg.dev/${PROJECT_ID}/dal-vacation-home-sdp4/dal-vacation-home-app:${SHORT_SHA}"
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET

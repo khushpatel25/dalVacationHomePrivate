@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { eachDayOfInterval } from 'date-fns';
 import toast from 'react-hot-toast';
 
 import userStore from '@/lib/store/userStore';
@@ -18,13 +19,32 @@ const RoomDetails = () => {
     const [feedback, setFeedback] = useState([]);
     const [resId, setResId] = useState();
     const [status, setStatus] = useState('unbooked');
+    const [disDates, setDisDates] = useState([]);
+
 
     const { userRole, userId } = userStore();
 
     const fetchReservations = async () => {
         try {
-            const res = await axiosInstance.get(import.meta.env.VITE_FETCH_RESERVATION_BY_ROOM_ID_URL + `?roomId=${roomId}`);
+            const res = await axiosInstance.get("https://r764pd4h2b.execute-api.us-east-1.amazonaws.com/reservationStage/fetchReservationByRoomId" + `?roomId=${roomId}`);
             const parsedBody = JSON.parse(res.data.body);
+
+
+            if (parsedBody?.reservations) {
+                let dates = [];
+
+                parsedBody?.reservations.forEach((reservation) => {
+                    const range = eachDayOfInterval({
+                        start: new Date(new Date(reservation.startDate)),
+                        end: new Date(new Date(reservation.endDate))
+                    });
+                    console.log({ range })
+                    dates = [...dates, ...range];
+                })
+                console.log({ dates });
+                setDisDates(dates);
+
+            }
 
             const filterReservations = parsedBody.reservations.filter((res => {
                 return res.userId === userId
@@ -45,7 +65,7 @@ const RoomDetails = () => {
 
     const fetchRoomDetails = async () => {
         try {
-            const response = await axiosInstance.get(import.meta.env.VITE_FETCH_ROOM_DETAILS_URL + `?roomId=${roomId}`);
+            const response = await axiosInstance.get("https://z6fffkei3a.execute-api.us-east-1.amazonaws.com/roomStage/getRoom" + `?roomId=${roomId}`);
             setRoom(JSON.parse(response.data.body));
         } catch (error) {
             console.error("Error while fetching roomDetails: ", error);
@@ -55,7 +75,7 @@ const RoomDetails = () => {
 
     const fetchFeedbacks = async () => {
         try {
-            const feedbackResponse = await axiosInstance.get(import.meta.env.VITE_FETCH_FEEDBACK_URL + `?roomId=${roomId}`)
+            const feedbackResponse = await axiosInstance.get("https://ew0w9pmr1i.execute-api.us-east-1.amazonaws.com/feedbackStage/getFeedback" + `?roomId=${roomId}`)
             setFeedback(JSON.parse(feedbackResponse.data.body));
         } catch (error) {
             if (error.message !== "Feedback is not found for given roomId!") {
@@ -72,7 +92,7 @@ const RoomDetails = () => {
 
     useEffect(() => {
         fetchReservations();
-    })
+    }, [])
 
     if (!room) return <Loader />;
 
@@ -89,7 +109,7 @@ const RoomDetails = () => {
                         <h1 className="text-4xl font-bold text-white">Room {room.roomNumber}</h1>
                         <div className='flex justify-end'>
                             {(userRole === "regular" && status === "unbooked") && (
-                                <CreateReservationModal roomId={roomId} roomNumber={room.roomNumber} setStatus={setStatus} />
+                                <CreateReservationModal roomId={roomId} roomNumber={room.roomNumber} setStatus={setStatus} disDates={disDates} />
                             )}
                             {(userRole === "regular" && status === "pending") && (
                                 <Button className="mt-2" variant='secondary' disabled={true}>Pending</Button>
@@ -97,7 +117,7 @@ const RoomDetails = () => {
                             {(userRole === "regular" && status === "booked") && (
                                 <Button className="mt-2" variant='secondary' disabled={true}>Booked</Button>
                             )}
-                            {userRole === "admin0" && (
+                            {(userRole === "admin0" && userId === room?.userId) && (
                                 <UpdateRoomModal room={room} onRoomUpdated={() => fetchRoomDetails()} />
                             )}
                         </div>
@@ -138,7 +158,7 @@ const RoomDetails = () => {
                         <h3 className="text-xl font-semibold">Feedback</h3>
                         {(resId) && (
                             <div className='flex justify-end mb-4'>
-                                <AddFeedbackModal roomNumber={room.roomNumber} roomId={roomId} userId={userId} onFeedbackAdded={fetchFeedbacks}/>
+                                <AddFeedbackModal roomNumber={room.roomNumber} roomId={roomId} userId={userId} onFeedbackAdded={fetchFeedbacks} />
                             </div>
                         )}
                     </div>
@@ -148,7 +168,7 @@ const RoomDetails = () => {
                                 feedback.map((item, index) => (
                                     <div key={index} className="border-b border-gray-200 pb-4 mb-4">
                                         <p className="text-gray-700 mb-2">{item.feedbackText}</p>
-                                        <p className="text-gray-900 text-sm">Polarity: <Button className={`cursor-auto ${item.sentiment === "POSITIVE" && 'bg-green-900'} ${item.sentiment === "NEGATIVE" && 'bg-red-900'}`}  size="sm" variant="custom">{item.sentiment}</Button></p>
+                                        <p className="text-gray-900 text-sm">Polarity: <Button className={`cursor-auto ${item.sentiment === "POSITIVE" && 'bg-green-900'} ${item.sentiment === "NEGATIVE" && 'bg-red-900'}`} size="sm" variant="custom">{item.sentiment}</Button></p>
                                     </div>
                                 ))
                             ) : (

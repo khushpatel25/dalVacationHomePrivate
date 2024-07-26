@@ -68,7 +68,7 @@ const UpdateRoomModal = ({ room ,onRoomUpdated}) => {
             
             const { roomType, tariff, amenities, description, capacity } = updatedRoom;
 
-            const res = await axiosInstance.put(import.meta.env.VITE_UPDATE_ROOM_URL + `?roomId=${room.roomId}`, {
+            const res = await axiosInstance.put("https://z6fffkei3a.execute-api.us-east-1.amazonaws.com/roomStage/updateRoom" + `?roomId=${room.roomId}`, {
                 roomType,
                 tariff,
                 capacity,
